@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "mineflayer": "^4.8.1",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "start": "tsc && node dist/index.js"
+  }
+}
