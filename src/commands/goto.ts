@@ -1,6 +1,6 @@
 import { goals } from "mineflayer-pathfinder";
-import { bot } from "./bot";
-const { GoalNear, GoalNearXZ, GoalY } = goals;
+import { bot } from "../bot";
+const { GoalNear, GoalNearXZ, GoalY, GoalBlock, GoalXZ } = goals;
 
 /**
  * implementation of the goto command in mineflayer using mineflayer-pathfinder
@@ -9,7 +9,7 @@ const { GoalNear, GoalNearXZ, GoalY } = goals;
  */
 export default async function goTo(
   to: string,
-  distance: number = 10
+  distance?: number
 ): Promise<void> {
   // parse the location string into x, y, and z
   const args = to.split(" ");
@@ -23,12 +23,13 @@ export default async function goTo(
     x = parseFloat(first);
     y = parseFloat(second);
     z = parseFloat(third);
-    bot.pathfinder.setGoal(new GoalNear(x, y, z, distance));
+    if (distance) bot.pathfinder.setGoal(new GoalNear(x, y, z, distance));
+    else bot.pathfinder.setGoal(new GoalBlock(x, y, z));
   } else if (first && second) {
-    console.log(`Going to ${first}, ${second}`);
     x = parseFloat(first);
     z = parseFloat(second);
-    bot.pathfinder.setGoal(new GoalNearXZ(x, z, distance));
+    if (distance) bot.pathfinder.setGoal(new GoalNearXZ(x, z, distance));
+    else bot.pathfinder.setGoal(new GoalXZ(x, z));
   } else if (first) {
     console.log(`Going to Y level ${first}`);
     y = parseFloat(first);

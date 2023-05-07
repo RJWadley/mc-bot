@@ -1,14 +1,16 @@
-import { bot } from "./commands/bot";
+import { bot } from "./bot";
 
 type Entity = typeof bot.entity;
 
 import mcData from "minecraft-data";
 
-const transparentBlocks = mcData(bot.version)
-  .blocksArray.filter((e) => e.transparent || e.boundingBox === "empty")
-  .map((e) => e.id);
+const transparentBlocks = () =>
+  mcData(bot.version)
+    .blocksArray.filter((e) => e.transparent || e.boundingBox === "empty")
+    .map((e) => e.id);
 
-const canSeeEntity = (entity: Entity, vectorLength = 5 / 16) => {
+const canSeeEntity = (entity?: Entity, vectorLength = 5 / 16) => {
+  if (!entity) return false;
   const { height, position } = bot.entity;
   const entityPos = entity.position.offset(
     -entity.width / 2,
@@ -43,7 +45,7 @@ const canSeeEntity = (entity: Entity, vectorLength = 5 / 16) => {
       const block = bot.blockAt(cursor);
 
       // block must be air/null or a transparent block
-      if (block !== null && !transparentBlocks.includes(block.type)) {
+      if (block !== null && !transparentBlocks().includes(block.type)) {
         return false;
       }
     }
